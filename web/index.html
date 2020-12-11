@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>QR Code Generator</title>
+    <link href="style.css" rel="stylesheet">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    
+</head>
+
+<body>
+    <section class="wellcome_area " id="home">
+        <div class="row h-100 d-flex justify-content-around text-center "
+         style="padding-top: 50px;color:white">
+
+            <div ><h3 class="heading shadow">Real Time  </h3>
+            
+            <div class="bg-black" style="postion:fixed;left:0">
+            <img id="real" src="" width="100%">
+           
+        </div>
+          
+            </div>
+            <div >
+                <h3 class="heading">Depth Map </h3>
+            
+              <div class=" bg-black">
+            <img id="depth" src="" width="100%">
+        </div>
+          
+            </div>
+        </div>
+
+       
+      
+    </section>
+<script defer>
+setTimeout(function loop(){generateQRCode();loop() }, 100);
+
+</script>
+</body>
+</html>
