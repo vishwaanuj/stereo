@@ -6,12 +6,167 @@
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>QR Code Generator</title>
+    <title>Depth Map Generator</title>
     <link href="style.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/izi.min.css">
     <script type="text/javascript" src="/eel.js"></script>
     <script type="text/javascript" src="main.js"></script>
+    <script src="js/izi.min.js" type="text/javascript"></script>
     
 </head>
+<style>
+#toast {
+    visibility: hidden;
+    max-width: 50px;
+    height: 50px;
+    /*margin-left: -125px;*/
+    margin: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+
+    position: fixed;
+    z-index: 1;
+    left: 0;right:0;
+    bottom: 30px;
+    font-size: 17px;
+    white-space: nowrap;
+}
+#toast #img{
+	width: 50px;
+	height: 50px;
+    
+    float: left;
+    
+    padding-top: 16px;
+    padding-bottom: 16px;
+    
+    box-sizing: border-box;
+
+    
+    background-color: #111;
+    color: #fff;
+}
+#toast #desc{
+
+    
+    color: #fff;
+   
+    padding: 16px;
+    
+    overflow: hidden;
+	white-space: nowrap;
+}
+
+#toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes expand {
+    from {min-width: 50px} 
+    to {min-width: 350px}
+}
+
+@keyframes expand {
+    from {min-width: 50px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes stay {
+    from {min-width: 350px} 
+    to {min-width: 350px}
+}
+
+@keyframes stay {
+    from {min-width: 350px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes shrink {
+    from {min-width: 350px;} 
+    to {min-width: 50px;}
+}
+
+@keyframes shrink {
+    from {min-width: 350px;} 
+    to {min-width: 50px;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 60px; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px;left;0px; opacity: 1;}
+    to {bottom: 60px; left:0px;opacity: 0;}
+}
+</style>
+<style>   .switch,
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .switch {
+        position: relative;
+        display: block;
+        width: 180px;
+        height: 60px;
+        background: #fefefe;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 30px 50px -10px rgb(173, 173, 173);
+   }
+    .switch:before {
+        content: 'Off';
+        background: teal;
+        color: #fefefe;
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        transform: translate(-5%, -50%);
+        font-size: 0.9rem;
+        width: 50%;
+        height: 90%;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        transition: all 250ms ease;
+   }
+    #checkbox {
+        display: none;
+   }
+    #checkbox:checked ~ .switch:before {
+        left: 50%;
+        content: 'On';
+   }
+   /*------------------------*/
+    .credit {
+        margin: 100px 0 0;
+   }
+    .credit a {
+        color: #253c60;
+        text-decoration: none;
+        font-size: 0.9rem;
+   }
+    .credit a:hover {
+        text-decoration: underline;
+   }
+    
+</style>
 
 <body>
     <section class="wellcome_area " id="home">
@@ -35,13 +190,48 @@
           
             </div>
         </div>
+<div class="d-flex justify-content-center" style="padding-top:50px">
 
-       
-      
+    <div class=" btn btn-lg btn-outline-light" id="cap" onclick="eel.save_image();" >
+        capture
+
+     </div>
+    
+</div>
+<div style="position:fixed;bottom:5vh;left:43vw">
+    <input type="checkbox" name="checkbox" onclick="toggle_stream()" id="checkbox">
+    <label for="checkbox" class="switch"></label>
+    </div>
+ <div id="toast">
+     <div id="img">status
+     </div><div id="desc">
+         Image Saved</div>
+         </div>   
     </section>
 <script defer>
-setTimeout(function loop(){generateQRCode();loop() }, 100);
-
+    
+ function toggle_stream() {
+        eel.toggle_stream();
+    }
+eel.expose(js_imshow);
+    function js_imshow(imgdata) {
+        document.getElementById("real").src = "data:image/jpeg;base64," + imgdata;
+    ;
+    }
+eel.expose(js_imshow_d);
+function js_imshow_d(imgdata) {
+        document.getElementById("depth").src = "data:image/jpeg;base64," + imgdata;
+    ;
+    }
+ eel.expose(alert_save);   
+function alert_save(){
+ 
+    var x = document.getElementById("toast")
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2500);
+ 
+        
+        }
 </script>
 </body>
 </html>
